@@ -20,8 +20,7 @@ function delete($file) {
     }
 }
 
-function upload($id)
-{
+function upload($id){
     $uploaddir = __DIR__ . '/images/';
     if ($_FILES['cover']['name']) {
         $uploadfile = $uploaddir . "main_{$id}.jpg";
