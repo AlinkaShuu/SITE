@@ -66,9 +66,16 @@ if (isset($_GET['edit'])) {
         header('Location: /RWxJC6OHIn.php?edit=' . $_GET['edit']);  
         exit();
     }
+	$id = '';
+    $name = '';
+    $year = '';
+    $continuance = '';
+    $short_description = '';
+    $id_sentiment = '';
+	
     $filmEdit = $db->query('SELECT * FROM `films` WHERE id_film = ' . (int)$_GET['edit'])->fetch();
     if (!$filmEdit) {
-        if (isset($_POST['id'], $_POST['name'], $_POST['short_description'], $_POST['continuance'])) {
+        if (isset($_POST['id'], $_POST['name'], $_POST['year'], $_POST['short_description'], $_POST['continuance'])) {
             $sql = "
 			INSERT INTO `films` (name_film, year, continuance, short_description, id_sentiment) 
 			VALUE (:name_film, :year, :continuance, :short_description, :id_sentiment)
@@ -87,7 +94,7 @@ if (isset($_GET['edit'])) {
             exit();
         }
     } else {
-        if (isset($_POST['id'], $_POST['name'], $_POST['short_description'], $_POST['continuance'])) {
+        if (isset($_POST['id'], $_POST['name'], $_POST['year'], $_POST['short_description'], $_POST['continuance'])) {
             $sql = "
 			UPDATE `films` SET 
 			name_film = :name_film, 
@@ -148,27 +155,27 @@ function getSentiment($id, $sentiments){
             </div>
         </nav>
         <a href="RWxJC6OHIn.php" class="btn btn-success">Назад</a>
-        <form enctype="multipart/form-data" action="/RWxJC6OHIn.php?edit=<?= $id ?>" method="post">
+        <form enctype="multipart/form-data" action="/RWxJC6OHIn.php?edit=<?= $id ?>" method="POST">
             <input type="hidden" id="id" value="<?= $id ?>" class="form-control" name="id" maxlength="255">
             <div class="form-group">
                 <label class="control-label" for="name">Название</label>
-                <input required type="text" id="name" value="<?= $name ?>" class="form-control" name="name" maxlength="255">
+				<input required type="text" id="name" value="<?php if(isset($name)){ echo $name;} ?>" class="form-control" name="name" maxlength="255">
             </div>
             <div class="form-group">
                 <label class="control-label" for="year">Год</label>
-                <input required type="number" id="year" value="<?= $year ?>" class="form-control" name="year" maxlength="255">
+                <input required type="number" id="year" value="<?php if(isset($year)){ echo $year;} ?>" class="form-control" name="year" maxlength="255">
             </div>
             <div class="form-group">
                 <label class="control-label" for="continuance">Продолжительность(мин)</label>
-                <input required type="number" id="continuance" value="<?= $continuance ?>" class="form-control" name="continuance" maxlength="255">
+                <input required type="number" id="continuance" value="<?php if(isset($continuance)){ echo $continuance;} ?>" class="form-control" name="continuance" maxlength="255">
             </div>
             <div class="form-group">
                 <label class="control-label" for="short_description">Описание</label>
-                <textarea required id="short_description" class="form-control" name="short_description"  maxlength="255"><?= $short_description ?></textarea>
+                <textarea required id="short_description" class="form-control" name="short_description"  maxlength="255"><?php if(isset($short_description)){ echo $short_description;} ?></textarea>
             </div>
             <div class="form-group">
                 <?php
-                if (file_exists(__DIR__ . "/images/main_{$id}.jpg")) { ?>
+                if (isset($id) && file_exists(__DIR__ . "/images/main_{$id}.jpg")) { ?>
                     <img width="200px" src="/images/main_<?php echo $id ?>.jpg" alt="">
                     <a href="/RWxJC6OHIn.php?edit=<?= $id ?>&file-delete=<?= "main_{$id}.jpg" ?>">Удалить</a>
                 <?php } ?>
@@ -176,7 +183,7 @@ function getSentiment($id, $sentiments){
                 <input type="file" name="cover">
             </div>
             <div class="form-group">
-                <?php if (file_exists(__DIR__ . "/images/img1_{$id}.jpg")) { ?>
+                <?php if (isset($id) && file_exists(__DIR__ . "/images/img1_{$id}.jpg")) { ?>
                     <img width="200px" src="/images/img1_<?php echo $id ?>.jpg" alt="">
                     <a href="/RWxJC6OHIn.php?edit=<?= $id ?>&file-delete=<?= "img1_{$id}.jpg" ?>">Удалить</a>
                 <?php } ?>
@@ -185,7 +192,7 @@ function getSentiment($id, $sentiments){
             </div>
             <div class="form-group">
                 <?php 
-                if (file_exists(__DIR__ . "/images/img2_{$id}.jpg")) { ?>
+                if (isset($id) && file_exists(__DIR__ . "/images/img2_{$id}.jpg")) { ?>
                     <img width="200px" src="/images/img2_<?php echo $id ?>.jpg" alt="">
                     <a href="/RWxJC6OHIn.php?edit=<?= $id ?>&file-delete=<?= "img2_{$id}.jpg" ?>">Удалить</a>
                 <?php } ?>
@@ -194,7 +201,7 @@ function getSentiment($id, $sentiments){
             </div>
             <div class="form-group">
                 <?php 
-                if (file_exists(__DIR__ . "/images/img3_{$id}.jpg")) { ?>
+                if (isset($id) && file_exists(__DIR__ . "/images/img3_{$id}.jpg")) { ?>
                     <img width="200px" src="/images/img3_<?php echo $id ?>.jpg" alt="">
                     <a href="/RWxJC6OHIn.php?edit=<?= $id ?>&file-delete=<?= "img3_{$id}.jpg" ?>">Удалить</a>
                 <?php } ?>
@@ -205,7 +212,7 @@ function getSentiment($id, $sentiments){
                 <label class="control-label" for="id_sentiment">Настроение</label>
                 <select required id="id_sentiment" class="form-control" name="id_sentiment">
                     <?php foreach ($sentiments as $sentiment) { ?>
-                        <option <? if ($sentiment['id_sentiment'] == $id_sentiment){
+                        <option <? if (isset($id_sentiment) && $sentiment['id_sentiment'] == $id_sentiment){
 						echo 'selected';
 						}?> value="<?= $sentiment['id_sentiment'] ?>"><?= $sentiment['name_sentiment'] ?>
                         </option>
