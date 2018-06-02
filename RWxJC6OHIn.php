@@ -154,7 +154,7 @@ function getSentiment($id, $sentiments){
                 <div class="col-sm"></div>
             </div>
         </nav>
-        <a href="RWxJC6OHIn.php" class="btn btn-success">Назад</a>
+        <a href="RWxJC6OHIn.php" class="btn btn-secondary">Назад</a>
         <form enctype="multipart/form-data" action="/RWxJC6OHIn.php?edit=<?= $id ?>" method="POST">
             <input type="hidden" id="id" value="<?= $id ?>" class="form-control" name="id" maxlength="255">
             <div class="form-group">
@@ -240,8 +240,9 @@ function getSentiment($id, $sentiments){
             </div>
         </nav>
         <div class="applications-index">
-            <h1>Фильмы</h1>
-            <a href="RWxJC6OHIn.php?edit=new" class="btn btn-success">Создать</a>
+			<h1>Фильмы</h1>
+            <a href="sentiments.php" class="btn btn-info">Настроения</a>
+			<a href="RWxJC6OHIn.php?edit=new" class="btn btn-success">Добавить Фильм</a> <br><br>
             <table class="table table-striped table-bordered">
                 <thead>
                 <tr>
