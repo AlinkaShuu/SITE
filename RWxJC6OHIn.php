@@ -253,12 +253,12 @@ function getSentiment($id, $sentiments){
                     <th>Продолжительность(мин)</th>
                     <th>Описание</th>
                     <th>Настроение</th>
-                    <th>Функция</th>
+                    <th>Действия</th>
                 </tr>
                 </thead>
                 <tbody>
                 <?php foreach ($films AS $key => $film) { ?>
-                    <tr data-key="1">
+                    <tr>
                         <td><?= ($key + 1) ?></td>
                         <td><?= $film['id_film'] ?></td>
                         <td><?= $film['name_film'] ?></td>

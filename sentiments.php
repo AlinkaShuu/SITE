@@ -1,5 +1,4 @@
 <?php
-
 $dbParams = require('db.php');
 $db = new PDO (
     "mysql:host={$dbParams['host']};dbname={$dbParams['database']};charset=utf8",
@@ -7,16 +6,19 @@ $db = new PDO (
     $dbParams['password']
 );
 
-function upload($id){
-}
-
-
 if (isset($_GET['edit'])) {
-   $id = '';
-   $name = '';
-   $sentimentEdit = $db->query('
-   SELECT * FROM `sentiments` 
-   WHERE id_sentiment = ' . (int)$_GET['edit'])->fetch();
+	
+	$id = '';
+    $name = '';
+	$sql = '
+	SELECT * FROM `sentiments` 
+	WHERE id_sentiment = :sentimentId';
+    $query = $db->prepare($sql);
+    $query->execute([
+        ':sentimentId' => $_GET['edit']
+    ]);
+    $sentimentEdit = $query->fetch();
+	
     if (!$sentimentEdit) {
         if (isset($_POST['id'], $_POST['name'])) {
             $sql = "
@@ -28,8 +30,7 @@ if (isset($_GET['edit'])) {
                 ':name_sentiment' => $_POST['name']
             ]);
             $id = $db->lastInsertId();
-            upload($id);
-            header('Location: /sentiments.php');
+			header('Location: /sentiments.php'); // Перенаправление браузера 
             exit();
         }
     } else {
@@ -44,7 +45,6 @@ if (isset($_GET['edit'])) {
 				':id_sentiment' => $_POST['id'],
                 ':name_sentiment' => $_POST['name']
             ]);
-            upload($_POST['id']);
             header('Location: /sentiments.php');
             exit();
         }
@@ -87,8 +87,9 @@ if (isset($_GET['edit'])) {
     <?php } else { ?>
         <?php
         $sentiments = $db->query('
-	        SELECT * FROM `sentiments` ORDER BY id_sentiment DESC
-          ')->fetchAll();
+	        SELECT * FROM `sentiments`
+			ORDER BY id_sentiment DESC
+        ')->fetchAll();
         ?>
         <nav class="navbar-light bg-light">
             <div class="row">
@@ -102,7 +103,7 @@ if (isset($_GET['edit'])) {
         <div class="applications-index">
             <h1>Настроения</h1>
 			<a href="RWxJC6OHIn.php" class="btn btn-primary">На главную</a> 
-            <a href="sentiments.php?edit=new" class="btn btn-success">Добавить настроение</a> <br><br>
+            <a href="sentiments.php?edit=" class="btn btn-success">Добавить настроение</a> <br><br>
             <table class="table table-striped table-bordered">
                 <thead>
                 <tr>
@@ -113,7 +114,7 @@ if (isset($_GET['edit'])) {
                 </thead>
                 <tbody>
                 <?php foreach ($sentiments AS $key => $sentiment) { ?>
-                    <tr data-key="1">
+                    <tr>
                         <td><?= $sentiment['id_sentiment'] ?></td>
                         <td><?= $sentiment['name_sentiment'] ?></td>
                         <td><a href="/sentiments.php?edit=<?= $sentiment['id_sentiment'] ?>">Редактировать</a></td>
