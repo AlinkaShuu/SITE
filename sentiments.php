@@ -1,7 +1,7 @@
 <?php
 $dbParams = require('db.php');
 $db = new PDO (
-    "mysql:host={$dbParams['host']};dbname={$dbParams['database']};charset=utf8",
+    "mysql:host=localhost;dbname=".$dbParams['database'].";charset=utf8",
     $dbParams['username'],
     $dbParams['password']
 );
@@ -10,6 +10,7 @@ if (isset($_GET['edit'])) {
 	
 	$id = '';
     $name = '';
+	
 	$sql = '
 	SELECT * FROM `sentiments` 
 	WHERE id_sentiment = :sentimentId';
